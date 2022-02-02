@@ -49,6 +49,13 @@ describe Oystercard do
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
+
+    it 'charges the user for the journey upon touch out' do
+      subject.top_up 1
+      subject.touch_in
+      subject.touch_out
+      expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE) 
+    end
   end
 end
 

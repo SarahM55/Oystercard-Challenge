@@ -34,11 +34,14 @@ class Oystercard
     @in_journey = false
   end
 
+  def insufficient_funds?
+    @balance < MINIMUM_BALANCE
+  end
+
+  private
+
   def deduct_fare(fare)
     @balance -= fare
   end
 
-  def insufficient_funds?
-    @balance < MINIMUM_BALANCE
-  end
 end
