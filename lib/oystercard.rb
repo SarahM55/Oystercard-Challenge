@@ -16,32 +16,28 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct(amount)
-    @balance -= amount
-  end
-
   def in_journey?
     @in_journey
   end
 
   def touch_in
-    fail "Insufficient funds for travel - balance below #{MINIMUM_BALANCE}" if insufficient_funds?
+    fail "Insufficient funds for travel - balance below #{MINIMUM_BALANCE}" if balance < MINIMUM_BALANCE
     @in_journey = true
   end
 
   def touch_out
-    deduct_fare(MINIMUM_FARE)
+    deduct(MINIMUM_FARE)
     @in_journey = false
   end
 
-  def insufficient_funds?
-    @balance < MINIMUM_BALANCE
-  end
+  #def insufficient_funds?
+  #  @balance < MINIMUM_BALANCE
+  #end
 
   private
 
-  def deduct_fare(fare)
-    @balance -= fare
+  def deduct(amount)
+    @balance -= amount
   end
 
 end

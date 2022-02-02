@@ -19,6 +19,7 @@ describe Oystercard do
     end 
   end
 
+=begin
   describe '#deduct' do
     it { is_expected.to respond_to(:deduct).with(1).argument }
 
@@ -26,6 +27,7 @@ describe Oystercard do
       expect { subject.deduct 1 }.to change{ subject.balance }.by -1
     end
   end
+=end
 
   describe '#journey' do
     it 'expects that a user is not initially in a journey' do
