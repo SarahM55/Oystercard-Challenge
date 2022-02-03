@@ -20,8 +20,20 @@ describe Oystercard do
   end
 
   describe '#journey' do
+    let(:journeys){ {:entry_station => 'station', :exit_station => 'exit_station'} }
     it 'expects that a user is not initially in a journey' do
       expect(subject).not_to be_in_journey
+    end
+
+    it 'stores the entry and exits stations upon touching out' do
+      subject.top_up(5)
+      subject.touch_in('station')
+      subject.touch_out('exit_station')
+      expect(subject.journeys).to include journeys
+    end
+
+    it 'checks that the card has an empty list of journeys by default' do
+      expect(subject.journeys).to be_empty
     end
   end
 
@@ -48,15 +60,15 @@ describe Oystercard do
     end
 
     it 'should change the active status of the card' do
-      subject.touch_out
+      subject.touch_out('exit_station')
       expect(subject.in_journey?).to eq false 
     end
 
     it 'charges the user for the journey upon touch out' do
       subject.top_up(5)
       subject.touch_in('station')
-      subject.touch_out
-      expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE) 
+      subject.touch_out('exit_station')
+      expect { subject.touch_out('exit_station') }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE) 
     end
   end
 
@@ -69,21 +81,3 @@ describe Oystercard do
     end
   end
 end
-
-=begin
-      subject.top_up 1
-      subject.touch_in
-      subject.touch_out
-      expect(subject).not_to be_in_journey
-    end
-=end
-
-=begin
-  describe '#deduct' do
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'can deduct from the balance' do
-      expect { subject.deduct 1 }.to change{ subject.balance }.by -1
-    end
-  end
-=end
