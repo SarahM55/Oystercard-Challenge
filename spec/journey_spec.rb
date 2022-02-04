@@ -50,8 +50,20 @@ describe Journey do
     it 'charges the user for the journey upon touch out' do
       subject.top_up(5)
       subject.touch_in('station')
-      subject.touch_out('exit_station')
       expect { subject.touch_out('exit_station') }.to change{ subject.balance }.by(-Journey::MINIMUM_FARE) 
+    end
+  end
+
+  describe '#fare' do
+    it 'should charge the penalty fee when there is no touch in' do
+      subject.top_up(10)
+      expect { subject.touch_out('exit_station') }.to change{ subject.balance }.by(-Journey::PENALTY_FARE) 
+    end
+
+    it 'should charge the penalty fee when there is no touch out' do
+      subject.top_up(10)
+      subject.touch_in('station')
+      expect { subject.touch_in('station') }.to change{ subject.balance }.by(-Journey::PENALTY_FARE)
     end
   end
 end

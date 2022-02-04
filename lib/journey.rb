@@ -5,6 +5,7 @@ class Journey
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
   MINIMUM_FARE = 1
+  PENALTY_FARE = 6
 
   attr_reader :balance, :entry_station, :exit_station, :journeys
 
@@ -23,15 +24,20 @@ class Journey
     
   def touch_in(station)
     fail "Insufficient funds for travel - balance below #{MINIMUM_BALANCE}" if balance < MINIMUM_BALANCE
-    @entry_station = station
     @journeys[:entry_station] = station
+    fare(@entry_station, @exit_station) if in_journey?
+    @entry_station = station
   end
     
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
     @exit_station = exit_station
     @journeys[:exit_station] = exit_station
+    fare(@entry_station, @exit_station)
     @entry_station = nil
+  end
+
+  def fare(entry, exit)
+    entry == nil || exit == nil ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
   end
 
   private
