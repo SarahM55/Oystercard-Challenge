@@ -12,6 +12,7 @@ class Journey
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance  
     @journeys = {}
+    @complete = false
   end
 
   def top_up(amount)
@@ -38,6 +39,14 @@ class Journey
 
   def fare(entry, exit)
     entry == nil || exit == nil ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
+  end
+
+  def complete?
+    @complete
+  end
+
+  def finish(station)
+    self
   end
 
   private
